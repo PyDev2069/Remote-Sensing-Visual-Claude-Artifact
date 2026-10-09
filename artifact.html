@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Mangroves after Cyclone Amphan: an animated explainer</title>
+<style>
+:root{--bg:#e8eee9;--card:#14213d;--ink:#f6f4ef;--mut:#9fb3c8;--acc:#1b9aaa;--org:#f08a24;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#17201e}}
+:root[data-theme="dark"]{--bg:#17201e}
+html,body{height:100%;margin:0}
+body{background:var(--bg);font-family:system-ui,Arial,sans-serif;color:var(--ink);overflow:hidden}
+#app{position:relative;height:100%}
+#scene{position:absolute;inset:0}
+.card{position:absolute;background:var(--card);color:var(--ink);border-radius:10px;padding:10px 14px;box-shadow:0 4px 16px #0004}
+#clock{left:12px;top:12px}
+#date{font-size:30px;display:block;line-height:1.1}
+#phase{font-size:12px;color:var(--mut);display:block;max-width:200px}
+#read{right:12px;top:12px;font-size:13px;min-width:130px}
+#read div{display:flex;justify-content:space-between;gap:14px;line-height:1.7}
+#read b{font-variant-numeric:tabular-nums}
+#bottom{left:50%;transform:translateX(-50%);bottom:12px;width:min(640px,calc(100% - 24px));box-sizing:border-box}
+#cap{font-size:15px;margin:0 0 6px;min-height:40px;line-height:1.35}
+.lg{font-size:12px;color:var(--mut);display:flex;gap:14px;margin-bottom:2px}
+.lg i{display:inline-block;width:14px;height:3px;vertical-align:middle;margin-right:5px}
+svg{width:100%;height:auto;display:block}
+#ctl{display:flex;gap:10px;align-items:center;margin-top:6px}
+#ctl button{background:var(--acc);color:#fff;border:0;border-radius:8px;padding:6px 14px;font-size:14px;cursor:pointer}
+#ctl input{flex:1}
+#note{font-size:11px;color:var(--mut);margin-top:4px}
+#tabs{display:flex;gap:6px;margin-bottom:8px;flex-wrap:wrap}
+#tabs button{background:#24324f;color:var(--mut);border:0;border-radius:14px;padding:4px 10px;font-size:12px;cursor:pointer}
+#tabs button.on{background:var(--acc);color:#fff}
+.pn{font-size:12.5px;line-height:1.35}
+.pr{margin-bottom:7px}.pr b{color:#f08a24;margin-right:6px}
+.bar{background:#24324f;border-radius:4px;margin-top:3px}
+.bar u{display:block;height:8px;border-radius:4px;background:#f08a24;width:0;transition:width .8s}
+.pn ol{margin:0;padding-left:18px}.pn li{margin-bottom:6px}
+.eqn{background:#24324f;border-radius:8px;padding:6px 10px;margin-top:6px;font-family:ui-monospace,monospace}
+.sm{font-size:11px;color:var(--mut);margin:4px 0 0}
+</style></head><body>
+<div id="app"><div id="scene"></div>
+<div class="card" id="clock"><b id="date">Jan 2019</b><small id="phase"></small></div>
+<div class="card" id="read">
+<div><span>Expected</span><b id="re"></b></div>
+<div><span>Observed</span><b id="ro"></b></div>
+<div><span>Deficit</span><b id="rd"></b></div>
+<div><span>Tide</span><b id="rt"></b></div><div><span>NDMI gap</span><b id='rn'></b></div></div>
+<div class="card" id="bottom">
+<div id='tabs'><button class='on'>NDVI</button><button>NDMI</button><button>P0 to P3</button><button>Counterfactual</button></div><p id="cap"></p><div id='v0'>
+<div class="lg"><span><i style="background:#1b9aaa"></i>Expected NDVI (no cyclone)</span><span><i style="background:#f08a24"></i>Observed NDVI</span></div>
+<svg viewBox="0 0 600 140" aria-label="Expected versus observed NDVI over time">
+<line x1="0" y1="120" x2="600" y2="120" stroke="#3b4a66"/>
+<path id="exp" fill="none" stroke="#1b9aaa" stroke-width="2.5" stroke-dasharray="6 5"/>
+<polygon id="def" fill="#f08a24" opacity=".3"/>
+<path id="obs" fill="none" stroke="#f08a24" stroke-width="3"/>
+<circle id="dot" r="5" fill="#f08a24"/>
+<line x1="166" y1="8" x2="166" y2="120" stroke="#9fb3c8" stroke-dasharray="3 3"/>
+<text x="170" y="16" fill="#9fb3c8" font-size="12">Amphan</text>
+<text x="4" y="136" fill="#9fb3c8" font-size="11">2019</text><text x="124" y="136" fill="#9fb3c8" font-size="11">2020</text><text x="244" y="136" fill="#9fb3c8" font-size="11">2021</text><text x="364" y="136" fill="#9fb3c8" font-size="11">2022</text><text x="484" y="136" fill="#9fb3c8" font-size="11">2023</text>
+</svg></div><div id='v1' hidden><div class='lg'><span><i style='background:#1b9aaa'></i>Expected NDMI (no cyclone)</span><span><i style='background:#f08a24'></i>Observed NDMI</span></div><svg viewBox='0 0 600 140' aria-label='Expected versus observed NDMI over time'><line x1='0' y1='120' x2='600' y2='120' stroke='#3b4a66'/><path id='exp2' fill='none' stroke='#1b9aaa' stroke-width='2.5' stroke-dasharray='6 5'/><polygon id='def2' fill='#f08a24' opacity='.3'/><path id='obs2' fill='none' stroke='#f08a24' stroke-width='3'/><circle id='dot2' r='5' fill='#f08a24'/><line x1='166' y1='8' x2='166' y2='120' stroke='#9fb3c8' stroke-dasharray='3 3'/><text x='170' y='16' fill='#9fb3c8' font-size='12'>Amphan</text><text x='4' y='136' fill='#9fb3c8' font-size='11'>2019</text><text x='124' y='136' fill='#9fb3c8' font-size='11'>2020</text><text x='244' y='136' fill='#9fb3c8' font-size='11'>2021</text><text x='364' y='136' fill='#9fb3c8' font-size='11'>2022</text><text x='484' y='136' fill='#9fb3c8' font-size='11'>2023</text></svg><p class='sm'>NDMI tracks canopy moisture. It gets its own counterfactual, built the same way as NDVI.</p></div><div id='v2' class='pn' hidden><div class='pr'><b>P0</b>Standard cloud mask + seasonal fit. Tides and shifting cloud gaps leak into the answer.<div class='bar'><u data-w='90'></u></div></div><div class='pr'><b>P1</b>P0 + fixed pre-Amphan mangrove footprint and valid-pixel checks, so the same ground is measured every date.<div class='bar'><u data-w='68'></u></div></div><div class='pr'><b>P2</b>P1 + water proxy from creek and mudflat patches. Only compare dates whose water level was seen before Amphan.<div class='bar'><u data-w='40'></u></div></div><div class='pr'><b>P3</b>P2 + swap in different reference patches, to check the result does not depend on one choice.<div class='bar'><u data-w='38'></u></div></div><p class='sm'>Bars = prediction error and false departures (shorter is better). This is the pattern the study will test, not a measured result. P2 counts as essential only if it improves predictions without hiding real canopy-to-water loss.</p></div><div id='v3' class='pn' hidden><ol><li><b>Learn</b> from clean pre-Amphan dates: index = trend + two seasonal waves + water proxy, fitted with Ridge regression.</li><li><b>Predict</b> forward: the expected index without Amphan, plus a prediction band checked on held-out time blocks.</li><li><b>Compare</b> on dates with comparable water: deficit D = expected minus observed.</li><li><b>Classify</b>: inside the band is normal. Below it on 3+ clear dates over 45+ days is persistent. Back inside for a set time is sustained return.</li></ol><div class='eqn'>D = Expected - Observed</div><p class='sm'>P0 to P3 only change the data going into step 1. The model stays the same, so any gain comes from preprocessing.</p></div>
+<div id="ctl"><button id="pp">Pause</button><input id="sl" type="range" min="0" max="60" step="0.1" value="0" aria-label="Timeline"></div>
+<div id="note">Illustrative animation with made-up numbers, not study results.</div>
+</div></div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script>
+const $=id=>document.getElementById(id);
+const TOT=60,M0=16.6;
+const E=m=>.62+.08*Math.sin(2*Math.PI*(m/12-.3));
+const K=m=>m<M0?0:Math.exp(-(m-M0)/16);
+const MN=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+let seed=7;const rnd=()=>(seed=(seed*16807)%2147483647)/2147483647;
+
+const wrap=$('scene');
+const r=new THREE.WebGLRenderer({antialias:true,alpha:true});
+r.setPixelRatio(Math.min(devicePixelRatio,2));
+r.shadowMap.enabled=true;r.shadowMap.type=THREE.PCFSoftShadowMap;
+wrap.appendChild(r.domElement);
+const sc=new THREE.Scene();
+const cam=new THREE.PerspectiveCamera(32,1,.1,200);
+sc.add(new THREE.HemisphereLight(0xffffff,0xb9c8c0,.95));
+const sun=new THREE.DirectionalLight(0xffffff,.8);
+sun.position.set(10,18,6);sun.castShadow=true;sun.shadow.mapSize.set(1024,1024);
+Object.assign(sun.shadow.camera,{left:-18,right:18,top:18,bottom:-18});
+sc.add(sun);
+
+const ground=new THREE.Mesh(new THREE.BoxGeometry(30,.6,30),new THREE.MeshLambertMaterial({color:0xe9efe9}));
+ground.position.y=-.3;ground.receiveShadow=true;sc.add(ground);
+
+const wmat=new THREE.MeshLambertMaterial({color:0x2aa3b3}),segs=[];
+function creek(p){for(let i=0;i<p.length-1;i++){const a=p[i],b=p[i+1],dx=b[0]-a[0],dz=b[1]-a[1],L=Math.hypot(dx,dz);
+const m=new THREE.Mesh(new THREE.BoxGeometry(1,.06,L+.6),wmat);
+m.position.set((a[0]+b[0])/2,.03,(a[1]+b[1])/2);m.rotation.y=Math.atan2(dx,dz);sc.add(m);segs.push(m)}}
+creek([[-15,-6],[-8,-4],[-3,-1],[2,0],[7,3],[15,4]]);
+creek([[-3,-1],[-2,6],[1,15]]);
+creek([[2,0],[6,-6],[8,-15]]);
+
+const hm=new THREE.MeshLambertMaterial({color:0xffffff});
+for(let i=0;i<18;i++){const e=rnd()<.5,s=rnd()<.5?-1:1,u=-13+rnd()*26,o=s*(11.8+rnd()*2.2);
+const h=.6+rnd()*.7,b=new THREE.Mesh(new THREE.BoxGeometry(1+rnd(),h,1+rnd()),hm);
+b.position.set(e?o:u,h/2,e?u:o);b.castShadow=true;b.receiveShadow=true;sc.add(b)}
+
+const ROI=[[-9,1,1],[-3,-7,.9],[9,-2,1],[4,7,.5]],mats=[],trees=[],rings=[],discs=[];
+const trunkM=new THREE.MeshLambertMaterial({color:0x6b4f33});
+ROI.forEach((q,i)=>{const x=q[0],z=q[1];
+const ring=new THREE.Mesh(new THREE.RingGeometry(3.3,3.6,48),new THREE.MeshBasicMaterial({color:0x1b9aaa,side:THREE.DoubleSide}));
+ring.rotation.x=-Math.PI/2;ring.position.set(x,.05,z);sc.add(ring);rings.push(ring);
+const disc=new THREE.Mesh(new THREE.CircleGeometry(3.3,48),new THREE.MeshBasicMaterial({color:0x1b9aaa,transparent:true,opacity:.12,side:THREE.DoubleSide}));
+disc.rotation.x=-Math.PI/2;disc.position.set(x,.04,z);sc.add(disc);discs.push(disc);
+const cm=new THREE.MeshLambertMaterial({color:0x3c9a5b,flatShading:true});mats.push(cm);
+for(let k=0;k<14;k++){const a=rnd()*6.28,d=Math.sqrt(rnd())*2.9,g=new THREE.Group();
+g.position.set(x+Math.cos(a)*d,0,z+Math.sin(a)*d);
+const t=new THREE.Mesh(new THREE.CylinderGeometry(.07,.11,.9,6),trunkM);t.position.y=.45;t.castShadow=true;
+const c=new THREE.Mesh(new THREE.IcosahedronGeometry(.75,0),cm);c.castShadow=true;
+g.add(t,c);g.userData={c:c,r:i,s:.8+rnd()*.5};sc.add(g);trees.push(g)}});
+
+const N=400,pp=new Float32Array(N*3);
+for(let i=0;i<N;i++){const a=i*.33,rad=.8+i/N*8;pp[i*3]=Math.cos(a)*rad;pp[i*3+1]=7+(i%7)*.3;pp[i*3+2]=Math.sin(a)*rad}
+const pg=new THREE.BufferGeometry();pg.setAttribute('position',new THREE.BufferAttribute(pp,3));
+const pm=new THREE.PointsMaterial({color:0x4a5b70,size:.28,transparent:true});
+const storm=new THREE.Points(pg,pm);sc.add(storm);
+
+function size(){const w=wrap.clientWidth,h=wrap.clientHeight;r.setSize(w,h);cam.aspect=w/h;cam.updateProjectionMatrix()}
+new ResizeObserver(size).observe(wrap);size();
+
+const X=m=>m*10,Y=v=>120-(v-.2)*175;
+let ex='';for(let i=0;i<=240;i++){const m=i*.25;ex+=(i?'L':'M')+X(m)+' '+Y(E(m))}
+$('exp').setAttribute('d',ex);
+const E2=m=>.30+.06*Math.sin(2*Math.PI*(m/12-.25)),Y2=v=>120-(v-.04)*309;
+let ex2='';for(let i=0;i<=240;i++){const q=i*.25;ex2+=(i?'L':'M')+X(q)+' '+Y2(E2(q))}
+$('exp2').setAttribute('d',ex2);
+
+let m=0,play=true,T=0,TAB=0;
+const tabs=document.querySelectorAll('#tabs button');
+function show(i){TAB=i;tabs.forEach((b,j)=>b.classList.toggle('on',i==j));[0,1,2,3].forEach(j=>{$('v'+j).hidden=j!=i});document.querySelectorAll('.bar u').forEach(u=>{u.style.width=i==2?u.dataset.w+'%':'0'})}
+tabs.forEach((b,i)=>{b.onclick=()=>show(i)});
+$('pp').onclick=()=>{play=!play;$('pp').textContent=play?'Pause':'Play'};
+$('sl').oninput=e=>{m=+e.target.value};
+
+const brown=new THREE.Color(0x9a7b4f),green=new THREE.Color(0x3c9a5b),clk=new THREE.Clock();
+function tick(){requestAnimationFrame(tick);
+const dt=Math.min(clk.getDelta(),.1);T+=dt;
+if(play){m+=dt*1.5;if(m>TOT+2)m=0}
+const mm=Math.min(m,TOT),k=K(mm),tide=.5+.5*Math.sin(2*Math.PI*mm/3.75);
+mats.forEach((c,i)=>{c.color.copy(brown).lerp(green,Math.max(0,1-ROI[i][2]*k*.85))});
+trees.forEach(g=>{const u=g.userData,h=1-ROI[u.r][2]*k*.85,s=.3+.7*h;
+u.c.scale.set(u.s*(.6+.4*h),u.s*s,u.s*(.6+.4*h));u.c.position.y=.8+.55*u.s*s});
+segs.forEach(s=>{s.scale.x=.7+1.1*tide});
+rings.forEach((g,i)=>{g.scale.setScalar(1+.04*tide)});
+discs.forEach(d=>{d.material.opacity=.08+.3*tide});
+const w=Math.max(0,1-Math.abs(mm-M0)/1.6);
+storm.visible=w>0;pm.opacity=w;storm.scale.setScalar(.6+w);storm.rotation.y+=dt*3;
+const a=.785+.25*Math.sin(T*.15),d=cam.aspect<1?54:36;
+cam.position.set(Math.cos(a)*d,d*.74,Math.sin(a)*d);
+cam.lookAt(Math.cos(a)*3.5,0,Math.sin(a)*3.5);
+r.render(sc,cam);
+
+const e=E(mm),dd=.25*k,o=e-dd;
+$('date').textContent=MN[Math.floor(mm%12)]+' '+(2019+Math.floor(mm/12));
+$('re').textContent=e.toFixed(2);$('ro').textContent=o.toFixed(2);
+$('rd').textContent=dd.toFixed(2);$('rd').style.color=dd>.02?'#f08a24':'';
+$('rt').textContent=tide>.5?'High':'Low';
+$('rn').textContent=(.18*k).toFixed(2);$('rn').style.color=k>.1?'#f08a24':'';
+let ph,cp;
+if(mm<M0-1){ph='Before Amphan: learning the pattern';cp='The satellite learns what normal looks like: seasonal ups and downs, plus tide effects.'}
+else if(mm<=M0+1){ph='Amphan makes landfall, 20 May 2020';cp='A cyclone hits. The key question: what would NDVI have been without it?'}
+else if(dd>.08){ph='Persistent departure';cp='Orange sits below the dashed line. That gap is the vegetation deficit.'}
+else if(dd>.02){ph='Recovery underway';cp='The gap shrinks as the mangroves regrow, and the trees fill back out.'}
+else{ph='Sustained return to the reference';cp='Observed NDVI is back on the expected line. Spectral recovery, not proof of full ecological recovery.'}
+$('phase').textContent=ph;
+$('cap').textContent=TAB==2?'Same model every time. Only the preprocessing changes from P0 to P3.':TAB==3?'How the what-if line is built, step by step.':(TAB==1?'NDMI (canopy moisture): ':'')+cp;
+$('sl').value=mm;
+let ob='';for(let i=0;i*.25<=mm;i++){const q=i*.25;ob+=(i?'L':'M')+X(q)+' '+Y(E(q)-.25*K(q))}
+$('obs').setAttribute('d',ob);
+$('dot').setAttribute('cx',X(mm));$('dot').setAttribute('cy',Y(o));
+let up=[],dn=[];
+if(mm>M0)for(let q=M0;q<=mm;q+=.25){up.push(X(q)+','+Y(E(q)));dn.unshift(X(q)+','+Y(E(q)-.25*K(q)))}
+$('def').setAttribute('points',up.concat(dn).join(' '));
+let o2='',u2=[],d2=[];
+for(let i=0;i*.25<=mm;i++){const q=i*.25;o2+=(i?'L':'M')+X(q)+' '+Y2(E2(q)-.18*K(q))}
+$('obs2').setAttribute('d',o2);$('dot2').setAttribute('cx',X(mm));$('dot2').setAttribute('cy',Y2(E2(mm)-.18*k));
+if(mm>M0)for(let q=M0;q<=mm;q+=.25){u2.push(X(q)+','+Y2(E2(q)));d2.unshift(X(q)+','+Y2(E2(q)-.18*K(q)))}
+$('def2').setAttribute('points',u2.concat(d2).join(' '));
+}
+tick();
+</script></body></html>
